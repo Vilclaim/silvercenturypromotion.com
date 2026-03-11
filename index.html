@@ -9,19 +9,16 @@
     :root {
       --bg: #0b1220;
       --panel: rgba(255,255,255,0.08);
-      --panel-strong: rgba(255,255,255,0.12);
       --text: #eef4ff;
       --muted: #b7c4dd;
       --primary: #4da3ff;
       --primary-2: #7c5cff;
-      --success: #2ecc71;
       --warning: #f5b041;
       --danger: #ff6b6b;
       --border: rgba(255,255,255,0.12);
       --shadow: 0 20px 60px rgba(0,0,0,0.35);
       --radius-xl: 24px;
       --radius-lg: 18px;
-      --radius-md: 14px;
       --highlight-bg: #ffd84d;
       --highlight-text: #1f1800;
     }
@@ -53,7 +50,7 @@
     }
 
     .container {
-      width: min(1200px, 92%);
+      width: min(1240px, 92%);
       margin: 0 auto;
     }
 
@@ -255,7 +252,7 @@
 
     .booking-bar {
       display: grid;
-      grid-template-columns: 1fr 1fr 0.9fr 0.75fr 0.9fr 0.9fr 0.9fr;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
       align-items: end;
     }
@@ -281,7 +278,10 @@
     }
 
     .input,
-    .select {
+    .select,
+    .textarea,
+    .admin-input,
+    .admin-select {
       width: 100%;
       background: transparent;
       border: none;
@@ -290,15 +290,17 @@
       font-size: 15px;
     }
 
-    .textarea {
-      width: 100%;
+    .textarea,
+    .admin-input,
+    .admin-select {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
-      color: white;
       padding: 13px 14px;
       border-radius: 14px;
-      outline: none;
       font-size: 14px;
+    }
+
+    .textarea {
       min-height: 110px;
       resize: vertical;
     }
@@ -386,12 +388,20 @@
       color: var(--warning);
       font-size: 13px;
       font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .trip-icon {
+      font-size: 15px;
+      line-height: 1;
     }
 
     .route {
       font-size: 1.3rem;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .dates {
@@ -399,6 +409,10 @@
       font-size: 14px;
       margin-bottom: 14px;
       line-height: 1.7;
+    }
+
+    .dates strong {
+      color: white;
     }
 
     .highlight-date {
@@ -514,18 +528,6 @@
       grid-column: 1 / -1;
     }
 
-    .admin-input,
-    .admin-select {
-      width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: white;
-      padding: 13px 14px;
-      border-radius: 14px;
-      outline: none;
-      font-size: 14px;
-    }
-
     .form-actions {
       display: flex;
       gap: 12px;
@@ -601,9 +603,13 @@
       color: white;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 1200px) {
       .booking-bar {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -687,7 +693,7 @@
 
           <h1>Check the latest <br> airline promo rates <br> in one place.</h1>
           <p>
-            Search airline promos by route, airline, trip type, month, and exact date to instantly view available rates, installment details, and travel inclusions.
+            Search airline promos by route, airline, trip type, departure, return, and exact date to instantly view available rates, installment details, and travel inclusions.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#promos">View Promo Rates</a>
@@ -712,7 +718,7 @@
             </div>
           </div>
           <div style="margin-top: 18px; color: var(--muted); font-size: 14px;">
-            Tip: Select a month and type a specific date like <strong>12</strong> to find only <strong>June 12</strong> or another exact date.
+            Tip: choose <strong>Round Trip</strong> to show separate <strong>Departure</strong> and <strong>Return</strong> search filters.
           </div>
         </div>
       </div>
@@ -740,6 +746,22 @@
             </div>
 
             <div class="search-field">
+              <label for="tripFilter">Trip Type</label>
+              <select id="tripFilter" class="select">
+                <option value="all">All Trip Types</option>
+                <option value="One Way">One Way</option>
+                <option value="Round Trip">Round Trip</option>
+              </select>
+            </div>
+
+            <div class="search-field">
+              <label for="airlineFilter">Airline</label>
+              <select id="airlineFilter" class="select">
+                <option value="all">All Airlines</option>
+              </select>
+            </div>
+
+            <div class="search-field" id="regularMonthWrap">
               <label for="monthFilter">Travel Month</label>
               <select id="monthFilter" class="select">
                 <option value="all">All Months</option>
@@ -758,25 +780,57 @@
               </select>
             </div>
 
-            <div class="search-field">
-              <label for="dateFilter">Date</label>
+            <div class="search-field" id="regularDateWrap">
+              <label for="dateFilter">Travel Date</label>
               <input id="dateFilter" class="input" type="number" min="1" max="31" placeholder="1-31" />
             </div>
 
-            <div class="search-field">
-              <label for="tripFilter">Trip Type</label>
-              <select id="tripFilter" class="select">
-                <option value="all">All Trip Types</option>
-                <option value="One Way">One Way</option>
-                <option value="Round Trip">Round Trip</option>
+            <div class="search-field hidden" id="departureMonthWrap">
+              <label for="departureMonthFilter">Departure Month</label>
+              <select id="departureMonthFilter" class="select">
+                <option value="all">All Months</option>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
               </select>
             </div>
 
-            <div class="search-field">
-              <label for="airlineFilter">Airline</label>
-              <select id="airlineFilter" class="select">
-                <option value="all">All Airlines</option>
+            <div class="search-field hidden" id="departureDateWrap">
+              <label for="departureDateFilter">Departure Date</label>
+              <input id="departureDateFilter" class="input" type="number" min="1" max="31" placeholder="1-31" />
+            </div>
+
+            <div class="search-field hidden" id="returnMonthWrap">
+              <label for="returnMonthFilter">Return Month</label>
+              <select id="returnMonthFilter" class="select">
+                <option value="all">All Months</option>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
               </select>
+            </div>
+
+            <div class="search-field hidden" id="returnDateWrap">
+              <label for="returnDateFilter">Return Date</label>
+              <input id="returnDateFilter" class="input" type="number" min="1" max="31" placeholder="1-31" />
             </div>
 
             <div class="search-field">
@@ -842,9 +896,19 @@
                   <input id="installment" class="admin-input" type="text" placeholder="AED 358 / 4 months via Tabby & Tamara" />
                 </div>
 
-                <div class="field full">
+                <div class="field full" id="oneWayDatesField">
                   <label for="dates">Available Dates</label>
-                  <input id="dates" class="admin-input" type="text" placeholder="April: 14 • May: 11, 13 • June: 6, 7" required />
+                  <input id="dates" class="admin-input" type="text" placeholder="April: 14 • May: 11, 13 • June: 6, 7" />
+                </div>
+
+                <div class="field full hidden" id="departureDatesField">
+                  <label for="departureDates">Departure Dates (Round Trip)</label>
+                  <input id="departureDates" class="admin-input" type="text" placeholder="June: 8, 9, 10, 11" />
+                </div>
+
+                <div class="field full hidden" id="returnDatesField">
+                  <label for="returnDates">Return Dates (Round Trip)</label>
+                  <input id="returnDates" class="admin-input" type="text" placeholder="July: 8, 9, 10, 11" />
                 </div>
 
                 <div class="field full">
@@ -912,6 +976,14 @@
       return airlineLogos[String(airlineName).toLowerCase().trim()] || defaultLogo;
     }
 
+    function getTripIcon(tripType) {
+      return String(tripType).toLowerCase().trim() === 'round trip' ? '⇄' : '→';
+    }
+
+    function getRouteArrow(tripType) {
+      return String(tripType).toLowerCase().trim() === 'round trip' ? '⇄' : '→';
+    }
+
     const samplePromos = [
       {
         airline: 'Cebu Pacific',
@@ -930,7 +1002,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1310,
-        installment: 'Flexible installment available',
+        installment: 'AED 355 / 4 months • Tabby/Tamara rate: AED 1421',
         dates: 'June: 1, 3, 12, 25 • July: 12',
         features: ['25KG Check-in', '7KG Hand Carry', 'Meal'],
         notes: 'Includes 6 hours layover.'
@@ -940,8 +1012,8 @@
         tripType: 'One Way',
         from: 'Dubai',
         to: 'Manila',
-        price: 1520,
-        installment: 'Installment option available',
+        price: 1575,
+        installment: 'AED 427 / 4 months • Tabby/Tamara rate: AED 1709',
         dates: 'June: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 • July: 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 31',
         features: ['23KG Check-in', '7KG Hand Carry', 'Meal'],
         notes: 'Includes 22 hours layover.'
@@ -952,7 +1024,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1220,
-        installment: 'AED 331 / 4 months • Tabby/Tamara rate: AED 1323',
+        installment: 'AED 331 / 4 months • Tabby/Tamara rate: AED 1324',
         dates: 'June: 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 16 • July: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 25, 26',
         features: ['46KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Cash Payment: AED 1220 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
@@ -963,7 +1035,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1750,
-        installment: 'AED 475 / 4 months',
+        installment: 'AED 475 / 4 months • Tabby/Tamara rate: AED 1899',
         dates: 'June: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26',
         features: ['46KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
@@ -974,7 +1046,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1165,
-        installment: 'AED 291.25 / 4 months',
+        installment: 'AED 316/ 4 months • Tabby/Tamara rate: AED 1264',
         dates: 'May: 4, 7, 11, 14, 18, 21, 28 • June: 1, 4, 5, 11, 15, 18, 22, 25, 29',
         features: ['20KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Cash Payment: AED 1165 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
@@ -985,7 +1057,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1220,
-        installment: 'AED 305 / 4 months',
+        installment: 'AED 331/ 4 months • Tabby/Tamara rate: AED 1324',
         dates: 'June: 8, 9, 11, 13, 17, 18, 19, 22, 23, 24, 25, 26, 27, 29, 30',
         features: ['23KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Cash Payment: AED 1220 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
@@ -996,7 +1068,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1050,
-        installment: 'AED 263 / 4 months',
+        installment: 'AED 285 / 4 months • Tabby/Tamara rate: AED 1139',
         dates: 'May: 13, 15, 17 • June: 3, 9, 17, 21',
         features: ['23KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Cash Payment: AED 1050 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
@@ -1007,7 +1079,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 1145,
-        installment: 'AED 286 / 4 months',
+        installment: 'AED 311 / 4 months • Tabby/Tamara rate: AED 1242',
         dates: 'May: 5, 9, 12, 19, 21, 23, 26, 28, 30',
         features: ['20KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Cash Payment: AED 1145 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
@@ -1018,15 +1090,51 @@
         from: 'Dubai',
         to: 'Manila',
         price: 2110,
-        installment: 'AED 527.5 / 4 months',
-        dates: 'June: 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 22, 23, 24, 25, 26, 27 • July: 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 22, 23, 24, 25, 26, 27',
+        installment: 'AED 572 / 4 months • Tabby/Tamara rate: AED 2289',
+        departureDates: 'June: 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 22, 23, 24, 25, 26, 27',
+        returnDates: 'July: 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 22, 23, 24, 25, 26, 27',
         features: ['23KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
-        notes: 'Cash Payment: AED 2110 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
+        notes: 'Round Trip Promo • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
+      },
+      {
+        airline: 'China Southern',
+        tripType: 'Round Trip',
+        from: 'Dubai',
+        to: 'Manila',
+        price: 1720,
+        installment: 'AED 467 / 4 months • Tabby/Tamara rate: AED 1866',
+        departureDates: 'June: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23',
+        returnDates: 'July: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23',
+        features: ['46KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
+        notes: 'Round Trip Promo • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
       }
     ];
 
     let promos = JSON.parse(localStorage.getItem('airlinePromos')) || [];
     let editId = null;
+
+    function normalizePromo(item) {
+      const promo = { ...item };
+
+      if (promo.tripType === 'Round Trip') {
+        promo.departureDates = promo.departureDates || promo.dates || '';
+        promo.returnDates = promo.returnDates || '';
+        promo.dates = '';
+      } else {
+        promo.dates = promo.dates || promo.departureDates || '';
+        promo.departureDates = '';
+        promo.returnDates = '';
+      }
+
+      if (!Array.isArray(promo.features)) {
+        promo.features = String(promo.features || '')
+          .split(',')
+          .map(item => item.trim())
+          .filter(Boolean);
+      }
+
+      return promo;
+    }
 
     function isSamePromo(a, b) {
       return (
@@ -1037,7 +1145,10 @@
       );
     }
 
-    samplePromos.forEach(newPromo => {
+    promos = promos.map(normalizePromo);
+
+    samplePromos.forEach(newPromoRaw => {
+      const newPromo = normalizePromo(newPromoRaw);
       const existingIndex = promos.findIndex(item => isSamePromo(item, newPromo));
 
       if (existingIndex !== -1) {
@@ -1070,6 +1181,10 @@
     const toSearch = document.getElementById('toSearch');
     const monthFilter = document.getElementById('monthFilter');
     const dateFilter = document.getElementById('dateFilter');
+    const departureMonthFilter = document.getElementById('departureMonthFilter');
+    const departureDateFilter = document.getElementById('departureDateFilter');
+    const returnMonthFilter = document.getElementById('returnMonthFilter');
+    const returnDateFilter = document.getElementById('returnDateFilter');
     const airlineFilter = document.getElementById('airlineFilter');
     const tripFilter = document.getElementById('tripFilter');
     const sortFilter = document.getElementById('sortFilter');
@@ -1077,6 +1192,18 @@
     const formTitle = document.getElementById('formTitle');
     const submitBtn = document.getElementById('submitBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const adminTripType = document.getElementById('tripType');
+
+    const regularMonthWrap = document.getElementById('regularMonthWrap');
+    const regularDateWrap = document.getElementById('regularDateWrap');
+    const departureMonthWrap = document.getElementById('departureMonthWrap');
+    const departureDateWrap = document.getElementById('departureDateWrap');
+    const returnMonthWrap = document.getElementById('returnMonthWrap');
+    const returnDateWrap = document.getElementById('returnDateWrap');
+
+    const oneWayDatesField = document.getElementById('oneWayDatesField');
+    const departureDatesField = document.getElementById('departureDatesField');
+    const returnDatesField = document.getElementById('returnDatesField');
 
     const inputs = {
       airline: document.getElementById('airline'),
@@ -1086,6 +1213,8 @@
       price: document.getElementById('price'),
       installment: document.getElementById('installment'),
       dates: document.getElementById('dates'),
+      departureDates: document.getElementById('departureDates'),
+      returnDates: document.getElementById('returnDates'),
       features: document.getElementById('features'),
       notes: document.getElementById('notes')
     };
@@ -1179,9 +1308,7 @@
 
       if (selectedMonth !== 'all' && selectedDate) {
         const day = Number(selectedDate);
-        if (!parsed[selectedMonth] || !parsed[selectedMonth].includes(day)) {
-          return safe;
-        }
+        if (!parsed[selectedMonth] || !parsed[selectedMonth].includes(day)) return safe;
 
         const monthName = selectedMonth.charAt(0).toUpperCase() + selectedMonth.slice(1);
         const pattern = new RegExp(`(${monthName}\\s*:\\s*)([\\s\\S]*?)(?=(?:\\s*[•|]\\s*)?(?:January|February|March|April|May|June|July|August|September|October|November|December)\\s*:|$)`, 'i');
@@ -1214,6 +1341,47 @@
       return safe;
     }
 
+    function updateSearchMode() {
+      const isRoundTrip = tripFilter.value === 'Round Trip';
+
+      regularMonthWrap.classList.toggle('hidden', isRoundTrip);
+      regularDateWrap.classList.toggle('hidden', isRoundTrip);
+
+      departureMonthWrap.classList.toggle('hidden', !isRoundTrip);
+      departureDateWrap.classList.toggle('hidden', !isRoundTrip);
+      returnMonthWrap.classList.toggle('hidden', !isRoundTrip);
+      returnDateWrap.classList.toggle('hidden', !isRoundTrip);
+
+      if (!isRoundTrip) {
+        departureMonthFilter.value = 'all';
+        departureDateFilter.value = '';
+        returnMonthFilter.value = 'all';
+        returnDateFilter.value = '';
+      } else {
+        monthFilter.value = 'all';
+        dateFilter.value = '';
+      }
+    }
+
+    function updateAdminMode() {
+      const isRoundTrip = adminTripType.value === 'Round Trip';
+
+      oneWayDatesField.classList.toggle('hidden', isRoundTrip);
+      departureDatesField.classList.toggle('hidden', !isRoundTrip);
+      returnDatesField.classList.toggle('hidden', !isRoundTrip);
+
+      inputs.dates.required = !isRoundTrip;
+      inputs.departureDates.required = isRoundTrip;
+      inputs.returnDates.required = isRoundTrip;
+
+      if (isRoundTrip) {
+        inputs.dates.value = '';
+      } else {
+        inputs.departureDates.value = '';
+        inputs.returnDates.value = '';
+      }
+    }
+
     function renderStats() {
       document.getElementById('totalPromos').textContent = promos.length;
 
@@ -1243,8 +1411,6 @@
     function getFilteredPromos() {
       const fromValue = fromSearch.value;
       const toValue = toSearch.value;
-      const selectedMonth = monthFilter.value;
-      const selectedDate = dateFilter.value.trim();
       const airline = airlineFilter.value;
       const trip = tripFilter.value;
       const sort = sortFilter.value;
@@ -1252,11 +1418,19 @@
       let filtered = promos.filter(item => {
         const matchesFrom = matchesLocation(fromValue, item.from);
         const matchesTo = matchesLocation(toValue, item.to);
-        const matchesDate = matchesTravelDate(item.dates, selectedMonth, selectedDate);
         const matchesAirline = airline === 'all' || item.airline === airline;
         const matchesTrip = trip === 'all' || item.tripType === trip;
 
-        return matchesFrom && matchesTo && matchesDate && matchesAirline && matchesTrip;
+        if (!(matchesFrom && matchesTo && matchesAirline && matchesTrip)) return false;
+
+        if (trip === 'Round Trip') {
+          return (
+            matchesTravelDate(item.departureDates, departureMonthFilter.value, departureDateFilter.value.trim()) &&
+            matchesTravelDate(item.returnDates, returnMonthFilter.value, returnDateFilter.value.trim())
+          );
+        }
+
+        return matchesTravelDate(item.dates || item.departureDates, monthFilter.value, dateFilter.value.trim());
       });
 
       if (sort === 'lowest') {
@@ -1270,10 +1444,21 @@
       return filtered;
     }
 
+    function getDisplayDates(item) {
+      if (item.tripType === 'Round Trip') {
+        return `
+          <div class="dates">
+            <strong>Departure:</strong> ${highlightDates(item.departureDates, departureMonthFilter.value, departureDateFilter.value.trim())}<br>
+            <strong>Return:</strong> ${highlightDates(item.returnDates, returnMonthFilter.value, returnDateFilter.value.trim())}
+          </div>
+        `;
+      }
+
+      return `<div class="dates"><strong>Available Dates:</strong> ${highlightDates(item.dates, monthFilter.value, dateFilter.value.trim())}</div>`;
+    }
+
     function renderPromos() {
       const filtered = getFilteredPromos();
-      const selectedMonth = monthFilter.value;
-      const selectedDate = dateFilter.value.trim();
 
       if (!filtered.length) {
         promoContainer.innerHTML = `
@@ -1297,11 +1482,14 @@
               />
               <span>${escapeHtml(item.airline)}</span>
             </div>
-            <div class="trip-type">${escapeHtml(item.tripType)}</div>
+            <div class="trip-type">
+              <span class="trip-icon">${getTripIcon(item.tripType)}</span>
+              <span>${escapeHtml(item.tripType)}</span>
+            </div>
           </div>
 
-          <div class="route">${escapeHtml(item.from)} → ${escapeHtml(item.to)}</div>
-          <div class="dates">Available Dates: ${highlightDates(item.dates, selectedMonth, selectedDate)}</div>
+          <div class="route">${escapeHtml(item.from)} ${getRouteArrow(item.tripType)} ${escapeHtml(item.to)}</div>
+          ${getDisplayDates(item)}
 
           <div class="price-row">
             <div class="price">
@@ -1341,12 +1529,16 @@
               />
               <div>
                 <h4>${escapeHtml(item.airline)}</h4>
-                <p>${escapeHtml(item.from)} → ${escapeHtml(item.to)} • ${escapeHtml(item.tripType)}</p>
+                <p>${escapeHtml(item.from)} ${getRouteArrow(item.tripType)} ${escapeHtml(item.to)} • ${escapeHtml(item.tripType)}</p>
               </div>
             </div>
             <strong>${formatPrice(item.price)}</strong>
           </div>
-          <p>${escapeHtml(item.dates)}</p>
+          <p>${
+            item.tripType === 'Round Trip'
+              ? `${escapeHtml(item.departureDates)} • Return: ${escapeHtml(item.returnDates)}`
+              : escapeHtml(item.dates)
+          }</p>
           <div class="mini-actions">
             <button class="btn btn-sm btn-edit" onclick="editPromo('${item.id}')">Edit</button>
             <button class="btn btn-sm btn-danger" onclick="deletePromo('${item.id}')">Delete</button>
@@ -1361,12 +1553,15 @@
       editId = null;
       formTitle.textContent = 'Add New Promo';
       submitBtn.textContent = 'Save Promo';
+      updateAdminMode();
     }
 
     function renderAll() {
       savePromos();
       populateAirlineFilter();
       renderStats();
+      updateSearchMode();
+      updateAdminMode();
       renderPromos();
       renderPromoList();
     }
@@ -1374,7 +1569,9 @@
     promoForm.addEventListener('submit', event => {
       event.preventDefault();
 
-      const promoData = {
+      const isRoundTrip = inputs.tripType.value === 'Round Trip';
+
+      const promoData = normalizePromo({
         id: editId || crypto.randomUUID(),
         airline: inputs.airline.value.trim(),
         tripType: inputs.tripType.value,
@@ -1382,13 +1579,15 @@
         to: inputs.to.value.trim(),
         price: Number(inputs.price.value),
         installment: inputs.installment.value.trim(),
-        dates: inputs.dates.value.trim(),
+        dates: isRoundTrip ? '' : inputs.dates.value.trim(),
+        departureDates: isRoundTrip ? inputs.departureDates.value.trim() : '',
+        returnDates: isRoundTrip ? inputs.returnDates.value.trim() : '',
         features: inputs.features.value
           .split(',')
           .map(item => item.trim())
           .filter(Boolean),
         notes: inputs.notes.value.trim()
-      };
+      });
 
       if (editId) {
         promos = promos.map(item => item.id === editId ? promoData : item);
@@ -1401,6 +1600,11 @@
     });
 
     resetBtn.addEventListener('click', resetForm);
+    adminTripType.addEventListener('change', updateAdminMode);
+    tripFilter.addEventListener('change', () => {
+      updateSearchMode();
+      renderPromos();
+    });
 
     function editPromo(id) {
       const promo = promos.find(item => item.id === id);
@@ -1416,10 +1620,13 @@
       inputs.to.value = promo.to;
       inputs.price.value = promo.price;
       inputs.installment.value = promo.installment;
-      inputs.dates.value = promo.dates;
+      inputs.dates.value = promo.dates || '';
+      inputs.departureDates.value = promo.departureDates || '';
+      inputs.returnDates.value = promo.returnDates || '';
       inputs.features.value = Array.isArray(promo.features) ? promo.features.join(', ') : '';
       inputs.notes.value = promo.notes || '';
 
+      updateAdminMode();
       document.getElementById('admin').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -1435,7 +1642,18 @@
     window.editPromo = editPromo;
     window.deletePromo = deletePromo;
 
-    [fromSearch, toSearch, monthFilter, dateFilter, airlineFilter, tripFilter, sortFilter].forEach(element => {
+    [
+      fromSearch,
+      toSearch,
+      monthFilter,
+      dateFilter,
+      departureMonthFilter,
+      departureDateFilter,
+      returnMonthFilter,
+      returnDateFilter,
+      airlineFilter,
+      sortFilter
+    ].forEach(element => {
       element.addEventListener('input', renderPromos);
       element.addEventListener('change', renderPromos);
     });
