@@ -1161,7 +1161,7 @@
   notes: 'Cash Payment: AED 1800 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
 },
 {
-       airline: 'Etihad',
+        airline: 'Etihad',
         tripType: 'Round Trip',
         from: 'ABU DHABI',
         to: 'MANILA',
@@ -1184,11 +1184,12 @@
         features: ['20KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
         notes: 'Cash Payment: AED 1,900 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
       },
-       {
-  airline: "EMIRATES",
-  tripType: "Round Trip",
-  from: "Dubai ',
-  to: "Davao ',
+
+      {
+  airline: 'EMIRATES',
+  tripType: 'Round Trip',
+  from: 'Dubai ',
+  to: 'Davao ',
   price: 3770,
   installment: "AED 1,023 / 4 months via Tabby & Tamara (Total: AED 4,092)",
   departureDates: "April: 12, 13, 14, 15, 21, 26, 28 • May: 3, 4, 5, 10, 11, 17, 18, 19",
@@ -1196,6 +1197,7 @@
   features: "25KG Check-in Baggage, 7KG Hand Carry, Meal on Board",
   notes: "Cash Payment: AED 3,770 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable."
 },
+
     ];
 
     let promos = JSON.parse(localStorage.getItem('airlinePromos')) || [];
@@ -1258,6 +1260,7 @@
       dubai: ['dubai', 'dxb'],
       mnl: ['mnl', 'manila'],
       manila: ['manila', 'mnl'],
+      davao: ['davao', 'dvo'],
       gensan: ['gensan', 'general santos', 'ges'],
       'general santos': ['general santos', 'gensan', 'ges'],
       ges: ['ges', 'general santos', 'gensan']
