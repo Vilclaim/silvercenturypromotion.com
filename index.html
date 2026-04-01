@@ -657,6 +657,58 @@
         width: min(100%, 220px);
       }
     }
+/* ===== UPDATED PRICE SYSTEM ===== */
+.old-price{
+  text-decoration: line-through;
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.new-price{
+  color: #4da3ff;
+  font-weight: 900;
+}
+
+.updated-badge{
+  position:absolute;
+  top:12px;
+  right:12px;
+  background:linear-gradient(135deg,#ff6b6b,#ffa500);
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:bold;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* ===== CANCELLED FLIGHT STYLE ===== */
+.cancelled {
+  color: #ff6b6b;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.cancelled-box {
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.cancelled-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ff3b3b;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+
   </style>
 </head>
 <body>
@@ -993,11 +1045,12 @@
         tripType: 'One Way',
         from: 'Dubai',
         to: 'Manila',
-        price: 1300,
-        installment: 'AED 353 / 4 months • Tabby/Tamara rate: AED 1,412',
+        price: 1375,
+        oldPrice: 1300,
+        installment: 'AED 373 / 4 months • Tabby/Tamara rate: AED 1,492',
         dates: 'May: 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 28, 30, 31 • June: 1, 2',
         features: ['6KG Hand Carry', '35KG Check-in Baggage', 'Meal on Board'],
-        notes: 'Cash Payment: AED 1300 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
+        notes: 'Cash Payment: AED 1375 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
       },
       {
         airline: 'Cebu Pacific',
@@ -1015,8 +1068,9 @@
         tripType: 'One Way',
         from: 'Dubai',
         to: 'Manila',
-        price: 1310,
-        installment: 'AED 355 / 4 months • Tabby/Tamara rate: AED 1421',
+        price: 4720,
+        oldPrice:1310,
+        installment: 'AED 1280 / 4 months • Tabby/Tamara rate: AED 5121',
         dates: 'June: 1, 3, 12, 25 • July: 12',
         features: ['25KG Check-in', '7KG Hand Carry', 'Meal'],
         notes: 'Includes 6 hours layover.'
@@ -1026,11 +1080,12 @@
         tripType: 'One Way',
         from: 'Dubai',
         to: 'Manila',
-        price: 1805,
+        price: 3836,
+        oldPrice: 1805,
         installment: 'AED 427 / 4 months • Tabby/Tamara rate: AED 1996',
         dates: 'June: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 • July: 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 31',
         features: ['23KG Check-in', '7KG Hand Carry', 'Meal'],
-        notes: 'Includes 22 hours layover.'
+        notes: 'Cash Payment: AED 3836 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
       },
       {
         airline: 'China Southern',
@@ -1049,6 +1104,7 @@
         from: 'Dubai',
         to: 'Manila',
         price: 2070,
+        oldPrice: 1880,
         installment: 'AED 562 / 4 months • Tabby/Tamara rate: AED 2246',
         dates: 'June: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26',
         features: ['46KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
@@ -1081,11 +1137,12 @@
         tripType: 'One Way',
         from: 'Dubai',
         to: 'Manila',
-        price: 1050,
-        installment: 'AED 285 / 4 months • Tabby/Tamara rate: AED 1139',
+        price: 1990,
+        oldPrice: 1050,
+        installment: 'AED 540 / 4 months • Tabby/Tamara rate: AED 2160',
         dates: 'May: 13, 15, 17 • June: 3, 9, 17, 21',
         features: ['23KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
-        notes: 'Cash Payment: AED 1050 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
+        notes: 'Cash Payment: AED 1990 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
       },
       {
         airline: 'Oman Air',
@@ -1111,17 +1168,21 @@
         notes: 'Round Trip Promo • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
       },
       {
-        airline: 'China Southern',
-        tripType: 'Round Trip',
-        from: 'Dubai',
-        to: 'Manila',
-        price: 1720,
-        installment: 'AED 467 / 4 months • Tabby/Tamara rate: AED 1866',
-        departureDates: 'June: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23',
-        returnDates: 'July: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23',
-        features: ['46KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
-        notes: 'Round Trip Promo • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
-      },
+  airline: 'China Southern',
+  tripType: 'Round Trip',
+  from: 'Dubai',
+  to: 'Manila',
+
+  price: 1720,
+  status: 'cancelled', // 🔥 ADD THIS
+
+  installment: 'Flight temporarily suspended',
+  departureDates: 'N/A',
+  returnDates: 'N/A',
+
+  features: ['Flight Suspended'],
+  notes: '⚠️ This flight is currently CANCELLED / NOT AVAILABLE due to airline schedule changes.'
+},
       {
         airline: 'Cebu Pacific',
         tripType: 'One Way',
@@ -1161,24 +1222,27 @@
   notes: 'Cash Payment: AED 1800 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
 },
 {
-        airline: 'Etihad',
-        tripType: 'Round Trip',
-        from: 'ABU DHABI',
-        to: 'MANILA',
-        price: 2860,
-        installment: 'AED 776/ 4 months via Tabby & Tamara rate: AED 3104',
-        departureDates: 'APRIL: 19, 20, 21, 22, 26, 28, 29,  • MAY: 3, 4, 5, 10, 17, 18, 19 ',
-        returnDates: 'MAY : 19, 20, 21, 22, 26, 28, 29,  • June: 3, 4, 5, 10, 17, 18, 19',
-        
-        features: ['25KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
-        notes: ' Cash Payment: AED 2,860 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
-      },
+  airline: 'Etihad',
+  tripType: 'Round Trip',
+  from: 'ABU DHABI',
+  to: 'MANILA',
+
+  price: 2910,
+  oldPrice: 2860,
+
+  installment: 'AED 789/ 4 months via Tabby & Tamara rate: AED 3156',
+  departureDates: 'APRIL: 19, 20, 21, 22, 26, 28, 29,  • MAY: 3, 4, 5, 10, 17, 18, 19 ',
+  returnDates: 'MAY : 19, 20, 21, 22, 26, 28, 29,  • June: 3, 4, 5, 10, 17, 18, 19',
+  features: ['25KG','7KG','Meal'],
+  notes: ' Cash Payment: AED 2,910 • Fare rates are subject to change depending on availability • Limited seats only • Non-refundable.'
+},
       {
         airline: 'EMIRATES',
         tripType: 'One Way',
         from: 'Dubai',
         to: 'Manila',
         price: 1930,
+         oldPrice: 1900,
         installment: 'AED  524/ 4 months • Tabby/Tamara rate: AED 2096',
         dates: '• June: 4, 8, 9, 11, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30 May: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20',
         features: ['30KG Check-in Baggage', '7KG Hand Carry', 'Meal on Board'],
@@ -1576,6 +1640,9 @@
 
       promoContainer.innerHTML = filtered.map(item => `
         <article class="promo-card">
+
+  ${item.status === 'cancelled' ? `<div class="cancelled-badge">CANCELLED</div>` : ''}
+  ${item.oldPrice ? `<div class="updated-badge">UPDATED 🔥</div>` : ''}
           <div class="promo-top">
             <div class="airline-badge">
               <img
@@ -1595,13 +1662,18 @@
           <div class="route">${escapeHtml(item.from)} ${getRouteArrow(item.tripType)} ${escapeHtml(item.to)}</div>
           ${getDisplayDates(item)}
 
-          <div class="price-row">
-            <div class="price">
-              ${formatPrice(item.price)}
-              <small>promo rate</small>
-            </div>
-            <div class="installment">${escapeHtml(item.installment || 'No installment info')}</div>
-          </div>
+         ${item.status === 'cancelled' ? `
+  <div class="cancelled-box">
+    <div class="cancelled">❌ CANCELLED FLIGHT</div>
+    <small>Temporarily Suspended</small>
+  </div>
+` : `
+  <div class="price">
+    ${item.oldPrice ? `<div class="old-price">${formatPrice(item.oldPrice)}</div>` : ''}
+    <div class="new-price">${formatPrice(item.price)}</div>
+    <small>promo rate</small>
+  </div>
+`}
 
           <div class="features">
             ${Array.isArray(item.features)
