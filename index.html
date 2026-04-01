@@ -1662,7 +1662,7 @@
           <div class="route">${escapeHtml(item.from)} ${getRouteArrow(item.tripType)} ${escapeHtml(item.to)}</div>
           ${getDisplayDates(item)}
 
-         ${item.status === 'cancelled' ? `
+        ${item.status === 'cancelled' ? `
   <div class="cancelled-box">
     <div class="cancelled">❌ CANCELLED FLIGHT</div>
     <small>Temporarily Suspended</small>
@@ -1673,8 +1673,11 @@
     <div class="new-price">${formatPrice(item.price)}</div>
     <small>promo rate</small>
   </div>
-`}
 
+  <div class="installment">
+    ${escapeHtml(item.installment || 'No installment info')}
+  </div>
+`}
           <div class="features">
             ${Array.isArray(item.features)
               ? item.features.map(feature => `<span class="tag">${escapeHtml(feature)}</span>`).join('')
